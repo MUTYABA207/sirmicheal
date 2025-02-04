@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Quiz</title>
+    <style>
+        /* Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            text-align: center;
+            padding: 20px;
+            background-image: url(trees.jpg);
+            background-repeat: no-repeat;
+            background-size:100%;
+            filter: none;
+            font-size: 30;
+            
+
+        }
+
+        .quiz-container {
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .options label {
+            background: #45c549;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .options label:hover {
+            background: #81c784;
+        }
+
+        .btn {
+            background: #388e3c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #2e7d32;
+        }
+
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #1b5e20;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .quiz-container {
+                width: 90%;
+            }
+        }
+        .back-button {
+        background: #388e3c;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .back-button:hover {
+        background: #2e7d32;
+        transform: scale(1.05);
+    }
+    </style>
+</head>
+<body>
+    <a href="table of contents.html"><button class="back-button" onclick="goBack()">🔙 Go Back</button></a>
+
+    <div class="quiz-container">
+        <h1>🌿 Environmental Conservation Quiz 🌍</h1>
+        <form id="quiz-form">
+            <div id="questions-container"></div>
+            <button type="button" class="btn" onclick="checkAnswers()">Submit Quiz</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the main cause of global warming?",
+                options: ["Cutting down trees", "Greenhouse gas emissions", "Eating too much fast food", "Overfishing"],
+                correct: "Greenhouse gas emissions"
+            },
+            {
+                question: "How much of the Earth's water is fresh and drinkable?",
+                options: ["50%", "10%", "3%", "1%"],
+                correct: "1%"
+            },
+            {
+                question: "What is the best way to reduce plastic pollution?",
+                options: ["Burn plastic", "Recycle and reduce plastic use", "Throw it in the ocean", "Bury plastic underground"],
+                correct: "Recycle and reduce plastic use"
+            },
+            {
+                question: "Which renewable energy source is the most widely used?",
+                options: ["Coal", "Solar", "Wind", "Hydropower"],
+                correct: "Hydropower"
+            },
+            {
+                question: "What is the main purpose of trees in the environment?",
+                options: ["Provide oxygen", "Absorb carbon dioxide", "Provide habitat for wildlife", "All of the above"],
+                correct: "All of the above"
+            },
+            {
+                question: "Which gas do plants absorb during photosynthesis?",
+                options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Methane"],
+                correct: "Carbon Dioxide"
+            },
+            {
+                question: "What is the largest source of pollution in the ocean?",
+                options: ["Oil Spills", "Plastic Waste", "Sewage", "Chemical Waste"],
+                correct: "Plastic Waste"
+            }
+        ];
+
+        let selectedQuestions = [];
+
+        function generateRandomQuestions() {
+            selectedQuestions = [];
+            let usedIndexes = new Set();
+
+            while (selectedQuestions.length < 5) {
+                let index = Math.floor(Math.random() * questions.length);
+                if (!usedIndexes.has(index)) {
+                    usedIndexes.add(index);
+                    selectedQuestions.push(questions[index]);
+                }
+            }
+
+            let container = document.getElementById("questions-container");
+            container.innerHTML = "";
+
+            selectedQuestions.forEach((q, i) => {
+                let html = `
+                    <div class="question">${i + 1}. ${q.question}</div>
+                    <div class="options">
+                        ${q.options.map(option => `<label><input type="radio" name="q${i}" value="${option}"> ${option}</label>`).join("")}
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            let total = selectedQuestions.length;
+            let form = document.getElementById("quiz-form");
+
+            selectedQuestions.forEach((q, i) => {
+                let selectedOption = form[`q${i}`].value;
+                if (selectedOption === q.correct) {
+                    score++;
+                }
+            });
+
+            let percentage = (score / total) * 100;
+            let message = `You scored ${score} out of ${total} (${percentage}%)`;
+
+            if (percentage >= 80) {
+                message += " 🌟 Excellent! You are an Eco-Champion!";
+            } else if (percentage >= 50) {
+                message += " 🌱 Good job! Keep learning and saving the planet!";
+            } else {
+                message += " ❌ Keep trying! The Earth needs more Eco-Warriors!";
+            }
+
+            document.getElementById("result").innerText = message;
+
+            // Refresh quiz with new questions after 3 seconds
+            setTimeout(() => {
+                generateRandomQuestions();
+                document.getElementById("result").innerText = "";
+            }, 3000);
+        }
+
+        // Load random questions on page load
+        generateRandomQuestions();
+    </script>
+
+</body>
+</html>
